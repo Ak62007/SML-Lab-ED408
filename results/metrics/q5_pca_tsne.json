@@ -1,0 +1,9 @@
+{
+  "pca_explained_variance_ratio": [
+    0.3799434606012729,
+    0.22477315222776145
+  ],
+  "pca_total_variance_explained_2d": 0.6047166128290343,
+  "tsne_sample_size": 4000,
+  "tsne_perplexity": 30
+}
