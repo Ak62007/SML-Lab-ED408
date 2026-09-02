@@ -1,0 +1,27 @@
+{
+  "depth6_test_accuracy": 0.753125,
+  "depth3_test_accuracy": 0.735625,
+  "confusion_matrix": [
+    [
+      1554,
+      846
+    ],
+    [
+      339,
+      2061
+    ]
+  ],
+  "classification_report": "              precision    recall  f1-score   support\n\n    non-edge       0.82      0.65      0.72      2400\n        edge       0.71      0.86      0.78      2400\n\n    accuracy                           0.75      4800\n   macro avg       0.76      0.75      0.75      4800\nweighted avg       0.76      0.75      0.75      4800\n",
+  "feature_importances": {
+    "local_std": 0.885483812804573,
+    "y_norm": 0.0418840387364676,
+    "R": 0.02355515408344313,
+    "B": 0.019221388842841497,
+    "grad_dir": 0.008389350676375827,
+    "x_norm": 0.007240047227209414,
+    "laplacian": 0.006136559791404129,
+    "grad_mag": 0.004400189633724377,
+    "gray": 0.002194058920300547,
+    "G": 0.0014953992836604024
+  }
+}
