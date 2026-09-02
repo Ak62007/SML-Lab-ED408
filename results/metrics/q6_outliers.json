@@ -1,0 +1,61 @@
+{
+  "per_feature": {
+    "R": {
+      "n_outliers_zscore": 0,
+      "pct_outliers_zscore": 0.0,
+      "n_outliers_iqr": 0,
+      "pct_outliers_iqr": 0.0,
+      "iqr_lower_fence": -0.25686274,
+      "iqr_upper_fence": 1.10784318
+    },
+    "G": {
+      "n_outliers_zscore": 0,
+      "pct_outliers_zscore": 0.0,
+      "n_outliers_iqr": 0,
+      "pct_outliers_iqr": 0.0,
+      "iqr_lower_fence": -0.2058823250000001,
+      "iqr_upper_fence": 1.064705875
+    },
+    "B": {
+      "n_outliers_zscore": 0,
+      "pct_outliers_zscore": 0.0,
+      "n_outliers_iqr": 0,
+      "pct_outliers_iqr": 0.0,
+      "iqr_lower_fence": -0.31176474,
+      "iqr_upper_fence": 1.0215687
+    },
+    "gray": {
+      "n_outliers_zscore": 0,
+      "pct_outliers_zscore": 0.0,
+      "n_outliers_iqr": 0,
+      "pct_outliers_iqr": 0.0,
+      "iqr_lower_fence": -0.22875817499999995,
+      "iqr_upper_fence": 1.036601305
+    },
+    "grad_mag": {
+      "n_outliers_zscore": 478,
+      "pct_outliers_zscore": 1.9916666666666667,
+      "n_outliers_iqr": 1352,
+      "pct_outliers_iqr": 5.633333333333333,
+      "iqr_lower_fence": -0.25458716875000004,
+      "iqr_upper_fence": 0.50588464525
+    },
+    "laplacian": {
+      "n_outliers_zscore": 500,
+      "pct_outliers_zscore": 2.083333333333333,
+      "n_outliers_iqr": 1562,
+      "pct_outliers_iqr": 6.508333333333334,
+      "iqr_lower_fence": -0.22418313874999998,
+      "iqr_upper_fence": 0.42941190324999995
+    },
+    "local_std": {
+      "n_outliers_zscore": 230,
+      "pct_outliers_zscore": 0.9583333333333333,
+      "n_outliers_iqr": 541,
+      "pct_outliers_iqr": 2.254166666666667,
+      "iqr_lower_fence": -0.12192796500000005,
+      "iqr_upper_fence": 0.27704573500000007
+    }
+  },
+  "total_rows": 24000
+}
