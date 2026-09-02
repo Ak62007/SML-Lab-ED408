@@ -1,0 +1,18 @@
+{
+  "test_accuracy": 0.684375,
+  "confusion_matrix": [
+    [
+      2046,
+      354
+    ],
+    [
+      1161,
+      1239
+    ]
+  ],
+  "classification_report": "                precision    recall  f1-score   support\n\nham (non-edge)       0.64      0.85      0.73      2400\n   spam (edge)       0.78      0.52      0.62      2400\n\n      accuracy                           0.68      4800\n     macro avg       0.71      0.68      0.68      4800\n  weighted avg       0.71      0.68      0.68      4800\n",
+  "class_priors": [
+    0.5,
+    0.5
+  ]
+}
