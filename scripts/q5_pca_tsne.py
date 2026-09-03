@@ -82,11 +82,34 @@ def main():
     plt.savefig(FIG_DIR / "q5_tsne_2d.png", bbox_inches="tight")
     plt.close()
 
+    # ---------- Parameter Modification: sensitivity to perplexity ----------
+    from sklearn.metrics import silhouette_score
+    sens_idx = idx[:1500]
+    X_sens, y_sens = Xs[sens_idx], y[sens_idx]
+    perplexities = [5, 15, 30, 50, 100]
+    sil_scores = []
+    for perp in perplexities:
+        t = TSNE(n_components=2, perplexity=perp, random_state=RANDOM_STATE, init="pca")
+        emb = t.fit_transform(X_sens)
+        sil = silhouette_score(emb, y_sens)
+        sil_scores.append(sil)
+        print(f"perplexity={perp:4d}  silhouette(edge vs non-edge)={sil:.4f}")
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.plot(perplexities, sil_scores, marker="o")
+    ax.set_xlabel("t-SNE perplexity")
+    ax.set_ylabel("silhouette score (class separation)")
+    ax.set_title("t-SNE: cluster separation vs perplexity")
+    plt.tight_layout()
+    plt.savefig(FIG_DIR / "q5_perplexity_sensitivity.png", bbox_inches="tight")
+    plt.close()
+
     save_metrics("q5_pca_tsne", {
         "pca_explained_variance_ratio": explained.tolist(),
         "pca_total_variance_explained_2d": float(explained.sum()),
         "tsne_sample_size": int(len(idx)),
         "tsne_perplexity": 30,
+        "perplexity_sweep": {"perplexities": perplexities, "silhouette_scores": sil_scores},
     })
 
 

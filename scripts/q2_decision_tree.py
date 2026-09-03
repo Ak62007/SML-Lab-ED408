@@ -62,12 +62,33 @@ def main():
     plt.savefig(FIG_DIR / "q2_tree_shallow.png", bbox_inches="tight", dpi=150)
     plt.close()
 
+    # ---------- Parameter Modification: sensitivity to max_depth ----------
+    depth_values = [1, 2, 3, 4, 5, 6, 8, 10, 15, None]
+    depth_accs = []
+    for d in depth_values:
+        c = DecisionTreeClassifier(max_depth=d, min_samples_leaf=20, random_state=42)
+        c.fit(X_train, y_train)
+        a = accuracy_score(y_test, c.predict(X_test))
+        depth_accs.append(a)
+        print(f"max_depth={str(d):5s} accuracy={a:.4f}")
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    x_labels = [str(d) if d is not None else "None" for d in depth_values]
+    ax.plot(x_labels, depth_accs, marker="o")
+    ax.set_xlabel("max_depth")
+    ax.set_ylabel("test accuracy")
+    ax.set_title("Decision Tree: accuracy vs max_depth")
+    plt.tight_layout()
+    plt.savefig(FIG_DIR / "q2_depth_sensitivity.png", bbox_inches="tight")
+    plt.close()
+
     save_metrics("q2_decision_tree", {
         "depth6_test_accuracy": acc,
         "depth3_test_accuracy": acc_shallow,
         "confusion_matrix": cm.tolist(),
         "classification_report": report,
         "feature_importances": {n: float(v) for n, v in importances},
+        "depth_sweep": {"depths": x_labels, "accuracies": depth_accs},
     })
 
 

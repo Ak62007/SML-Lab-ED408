@@ -88,8 +88,32 @@ def main():
     table = pd.DataFrame([{k: r[k] for k in ["name"] + metrics} for r in results])
     print("\n", table.to_string(index=False))
 
+    # ---------- Parameter Modification: sensitivity to SVM's C ----------
+    C_values = [0.01, 0.1, 1, 10, 100]
+    C_accs, C_f1s = [], []
+    for C in C_values:
+        m = SVC(kernel="rbf", C=C, gamma="scale", random_state=42)
+        m.fit(X_train, y_train)
+        preds = m.predict(X_test)
+        a, f = accuracy_score(y_test, preds), f1_score(y_test, preds)
+        C_accs.append(a)
+        C_f1s.append(f)
+        print(f"C={C:<6g} accuracy={a:.4f}  f1={f:.4f}")
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.plot([str(c) for c in C_values], C_accs, marker="o", label="accuracy")
+    ax.plot([str(c) for c in C_values], C_f1s, marker="s", label="f1")
+    ax.set_xlabel("SVM regularization C")
+    ax.set_ylabel("score")
+    ax.set_title("SVM: accuracy / F1 vs regularization C")
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig(FIG_DIR / "q7_C_sensitivity.png", bbox_inches="tight")
+    plt.close()
+
     save_metrics("q7_compare_models", {
-        r["name"]: {k: float(r[k]) for k in metrics} for r in results
+        **{r["name"]: {k: float(r[k]) for k in metrics} for r in results},
+        "svm_C_sweep": {"C_values": C_values, "accuracies": C_accs, "f1_scores": C_f1s},
     })
 
 

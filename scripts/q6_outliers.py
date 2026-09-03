@@ -82,7 +82,44 @@ def main():
     df_treated.to_csv(treated_path, index=False)
     print(f"saved treated dataset -> {treated_path}")
 
-    save_metrics("q6_outliers", {"per_feature": summary, "total_rows": len(df)})
+    # ---------- Parameter Modification: sensitivity to threshold ----------
+    # use grad_mag (the feature with the most outliers) to demonstrate sensitivity
+    demo_col = "grad_mag"
+    z_thresholds = [2.0, 2.5, 3.0, 3.5, 4.0]
+    z_counts_by_thresh = [int((((df[demo_col] - df[demo_col].mean()) / df[demo_col].std()).abs() > t).sum())
+                           for t in z_thresholds]
+    iqr_ks = [1.0, 1.5, 2.0, 2.5, 3.0]
+    q1, q3 = df[demo_col].quantile(0.25), df[demo_col].quantile(0.75)
+    iqr_val = q3 - q1
+    iqr_counts_by_k = [int(((df[demo_col] < q1 - k * iqr_val) | (df[demo_col] > q3 + k * iqr_val)).sum())
+                        for k in iqr_ks]
+
+    print(f"\nSensitivity for '{demo_col}':")
+    for t, c in zip(z_thresholds, z_counts_by_thresh):
+        print(f"  z-threshold={t}  outliers={c}")
+    for k, c in zip(iqr_ks, iqr_counts_by_k):
+        print(f"  iqr-k={k}  outliers={c}")
+
+    fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+    axes[0].plot(z_thresholds, z_counts_by_thresh, marker="o")
+    axes[0].set_xlabel("Z-score threshold"); axes[0].set_ylabel("# outliers")
+    axes[0].set_title(f"'{demo_col}': outliers vs Z-threshold")
+    axes[1].plot(iqr_ks, iqr_counts_by_k, marker="o", color="#DD8452")
+    axes[1].set_xlabel("IQR multiplier (k)"); axes[1].set_ylabel("# outliers")
+    axes[1].set_title(f"'{demo_col}': outliers vs IQR multiplier")
+    plt.tight_layout()
+    plt.savefig(FIG_DIR / "q6_threshold_sensitivity.png", bbox_inches="tight")
+    plt.close()
+
+    save_metrics("q6_outliers", {
+        "per_feature": summary,
+        "total_rows": len(df),
+        "threshold_sweep": {
+            "demo_column": demo_col,
+            "z_thresholds": z_thresholds, "z_counts": z_counts_by_thresh,
+            "iqr_ks": iqr_ks, "iqr_counts": iqr_counts_by_k,
+        },
+    })
 
 
 if __name__ == "__main__":

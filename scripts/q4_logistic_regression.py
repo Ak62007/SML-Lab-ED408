@@ -87,6 +87,26 @@ def main():
     plt.savefig(FIG_DIR / "q4_logreg_coefficients.png", bbox_inches="tight")
     plt.close()
 
+    # ---------- Parameter Modification: sensitivity to learning rate ----------
+    lr_values = [0.001, 0.01, 0.1, 0.5, 1.0, 3.0]
+    lr_accs, lr_final_losses = [], []
+    for lr in lr_values:
+        m = LogisticRegressionScratch(lr=lr, n_iters=3000)
+        m.fit(X_train, y_train)
+        a = accuracy_score(y_test, m.predict(X_test))
+        lr_accs.append(a)
+        lr_final_losses.append(m.loss_history[-1])
+        print(f"lr={lr:<6g} final_loss={m.loss_history[-1]:.4f}  accuracy={a:.4f}")
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.plot([str(v) for v in lr_values], lr_accs, marker="o")
+    ax.set_xlabel("learning rate")
+    ax.set_ylabel("test accuracy")
+    ax.set_title("Logistic Regression: accuracy vs learning rate")
+    plt.tight_layout()
+    plt.savefig(FIG_DIR / "q4_lr_sensitivity.png", bbox_inches="tight")
+    plt.close()
+
     save_metrics("q4_logistic_regression", {
         "test_accuracy": acc,
         "confusion_matrix": cm.tolist(),
@@ -94,6 +114,8 @@ def main():
         "final_loss": model.loss_history[-1],
         "weights": {n: float(w) for n, w in zip(FEATURE_COLS, model.w[1:])},
         "bias": float(model.w[0]),
+        "lr_sweep": {"learning_rates": lr_values, "accuracies": lr_accs,
+                     "final_losses": lr_final_losses},
     })
 
 

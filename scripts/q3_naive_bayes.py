@@ -59,11 +59,31 @@ def main():
     plt.savefig(FIG_DIR / "q3_nb_roc.png", bbox_inches="tight")
     plt.close()
 
+    # ---------- Parameter Modification: sensitivity to var_smoothing ----------
+    smoothing_values = [1e-11, 1e-9, 1e-7, 1e-5, 1e-3, 1e-1, 1.0]
+    smoothing_accs = []
+    for vs in smoothing_values:
+        c = GaussianNB(var_smoothing=vs)
+        c.fit(X_train, y_train)
+        a = accuracy_score(y_test, c.predict(X_test))
+        smoothing_accs.append(a)
+        print(f"var_smoothing={vs:<9g} accuracy={a:.4f}")
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.plot([str(v) for v in smoothing_values], smoothing_accs, marker="o")
+    ax.set_xlabel("var_smoothing")
+    ax.set_ylabel("test accuracy")
+    ax.set_title("Naive Bayes: accuracy vs var_smoothing")
+    plt.tight_layout()
+    plt.savefig(FIG_DIR / "q3_smoothing_sensitivity.png", bbox_inches="tight")
+    plt.close()
+
     save_metrics("q3_naive_bayes", {
         "test_accuracy": acc,
         "confusion_matrix": cm.tolist(),
         "classification_report": report,
         "class_priors": clf.class_prior_.tolist(),
+        "smoothing_sweep": {"var_smoothing": smoothing_values, "accuracies": smoothing_accs},
     })
 
 

@@ -57,5 +57,36 @@
       "iqr_upper_fence": 0.27704573500000007
     }
   },
-  "total_rows": 24000
+  "total_rows": 24000,
+  "threshold_sweep": {
+    "demo_column": "grad_mag",
+    "z_thresholds": [
+      2.0,
+      2.5,
+      3.0,
+      3.5,
+      4.0
+    ],
+    "z_counts": [
+      1416,
+      854,
+      478,
+      247,
+      100
+    ],
+    "iqr_ks": [
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "iqr_counts": [
+      2270,
+      1352,
+      773,
+      388,
+      179
+    ]
+  }
 }
