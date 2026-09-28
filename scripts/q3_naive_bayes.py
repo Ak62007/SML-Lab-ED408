@@ -12,6 +12,7 @@ in place of word/token features.
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import stats
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import (accuracy_score, confusion_matrix,
                               classification_report, RocCurveDisplay)
@@ -19,11 +20,76 @@ from sklearn.metrics import (accuracy_score, confusion_matrix,
 from common import load_split, save_metrics, FIG_DIR
 
 
+def check_normality(X, y, feature_names=None, max_n=5000, seed=0):
+    """
+    Check normality of each feature, separately for each class.
+    (GaussianNB assumes each feature is normal *within a class*,
+    so checking the pooled data would be the wrong test.)
+
+    Prints a table, saves Q-Q plots, and returns a dict of results.
+    """
+    X = np.asarray(X)
+    y = np.asarray(y)
+    rng = np.random.default_rng(seed)
+    if feature_names is None:
+        feature_names = [f"f{i}" for i in range(X.shape[1])]
+
+    results = {}
+    print("\n--- Normality check (training set, per class) ---")
+    print(f"{'class':<6}{'feature':<14}{'skew':>8}{'ex.kurt':>9}"
+          f"{'shapiro_p':>12}{'dagostino_p':>13}")
+    for cls in np.unique(y):
+        Xc = X[y == cls]
+        for j, name in enumerate(feature_names):
+            col = Xc[:, j]
+            if np.ptp(col) == 0:          # constant feature, tests are meaningless
+                continue
+            # Shapiro is only reliable up to ~5000 points, so subsample
+            sample = col if len(col) <= max_n else rng.choice(col, max_n, replace=False)
+            _, sh_p = stats.shapiro(sample)
+            _, dag_p = stats.normaltest(col)   # fine for large n
+            sk = stats.skew(col)
+            ku = stats.kurtosis(col)           # 0 means normal-like tails
+            results[f"class{cls}_{name}"] = dict(
+                skew=float(sk), excess_kurtosis=float(ku),
+                shapiro_p=float(sh_p), dagostino_p=float(dag_p))
+            print(f"{cls:<6}{name:<14}{sk:>8.2f}{ku:>9.2f}{sh_p:>12.2e}{dag_p:>13.2e}")
+
+    # Q-Q plots: points on the line = normal-like
+    n_feat = len(feature_names)
+    ncols = min(4, n_feat)
+    nrows = int(np.ceil(n_feat / ncols))
+    fig, axes = plt.subplots(nrows, ncols, figsize=(3.2 * ncols, 3 * nrows),
+                             squeeze=False)
+    for j, name in enumerate(feature_names):
+        ax = axes[j // ncols][j % ncols]
+        for cls, color in zip(np.unique(y), ["tab:blue", "tab:red"]):
+            col = X[y == cls][:, j]
+            if np.ptp(col) == 0:
+                continue
+            if len(col) > max_n:
+                col = rng.choice(col, max_n, replace=False)
+            (osm, osr), (slope, intercept, _) = stats.probplot(col, dist="norm")
+            ax.plot(osm, osr, ".", ms=2, alpha=0.5, color=color, label=f"class {cls}")
+            ax.plot(osm, slope * osm + intercept, "-", lw=1, color=color)
+        ax.set_title(name, fontsize=9)
+    for k in range(n_feat, nrows * ncols):
+        axes[k // ncols][k % ncols].axis("off")
+    axes[0][0].legend(fontsize=7)
+    plt.tight_layout()
+    plt.savefig(FIG_DIR / "q3_normality_qq.png", bbox_inches="tight")
+    plt.close()
+    return results
+
+
 def main():
-    # GaussianNB is not scale-sensitive, but scaling keeps things consistent
-    # with the other questions and doesn't change its predictions.
+    # GaussianNB is not scale-sensitive, so no scaling needed here.
     X_train, X_test, y_train, y_test = load_split(scale=False)
     print(f"train={X_train.shape}, test={X_test.shape}")
+
+    # ---------- Normality check (training set only, no test-set leakage) ----------
+    # Pass feature_names=[...] if you have them, for readable labels.
+    normality = check_normality(X_train, y_train)
 
     clf = GaussianNB()
     clf.fit(X_train, y_train)
@@ -84,6 +150,7 @@ def main():
         "classification_report": report,
         "class_priors": clf.class_prior_.tolist(),
         "smoothing_sweep": {"var_smoothing": smoothing_values, "accuracies": smoothing_accs},
+        "normality_check": normality,
     })
 
 
