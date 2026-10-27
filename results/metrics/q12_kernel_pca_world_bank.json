@@ -1,0 +1,56 @@
+{
+  "dataset": "World Bank World Development Indicators cross-section",
+  "year": 2023,
+  "economies": 188,
+  "selected_gamma": 0.046415888336127774,
+  "best_cv_balanced_accuracy": 0.7692397660818713,
+  "test_metrics": {
+    "Raw standardized features": {
+      "Balanced accuracy": 0.8156862745098039,
+      "Macro F1": 0.8156862745098039,
+      "ROC AUC": 0.8705882352941177
+    },
+    "RBF Kernel PCA": {
+      "Balanced accuracy": 0.7450980392156863,
+      "Macro F1": 0.7188219052001841,
+      "ROC AUC": 0.8098039215686275
+    },
+    "Ordinary PCA": {
+      "Balanced accuracy": 0.6147058823529412,
+      "Macro F1": 0.6130750605326876,
+      "ROC AUC": 0.7372549019607844
+    }
+  },
+  "confusion_matrices": {
+    "Raw standardized features": [
+      [
+        26,
+        4
+      ],
+      [
+        4,
+        13
+      ]
+    ],
+    "Ordinary PCA": [
+      [
+        21,
+        9
+      ],
+      [
+        8,
+        9
+      ]
+    ],
+    "RBF Kernel PCA": [
+      [
+        20,
+        10
+      ],
+      [
+        3,
+        14
+      ]
+    ]
+  }
+}

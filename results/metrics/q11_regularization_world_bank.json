@@ -1,0 +1,60 @@
+{
+  "dataset": "World Bank World Development Indicators panel",
+  "years": [
+    2010,
+    2023
+  ],
+  "rows": 3283,
+  "economies": 241,
+  "country_overlap": 0,
+  "best_test_model": "Linear Regression",
+  "models": {
+    "Linear Regression": {
+      "parameters": {},
+      "Test log RMSE": 0.7605595783823503,
+      "Test log MAE": 0.5780068429350282,
+      "Test R2": 0.653739162922196,
+      "Median absolute percentage error": 0.46963967057212974,
+      "Nonzero coefficients": 9.0,
+      "Coefficient L1 norm": 1.7253170579839365,
+      "Coefficient L2 norm": 0.9524404565332504
+    },
+    "Lasso L1": {
+      "parameters": {
+        "alpha": 0.01778279410038923
+      },
+      "Test log RMSE": 0.7623190379575143,
+      "Test log MAE": 0.5755368055963691,
+      "Test R2": 0.6521352474535403,
+      "Median absolute percentage error": 0.4675308669605053,
+      "Nonzero coefficients": 8.0,
+      "Coefficient L1 norm": 1.5882896248792528,
+      "Coefficient L2 norm": 0.9321408943521262
+    },
+    "Ridge L2": {
+      "parameters": {
+        "alpha": 100.0
+      },
+      "Test log RMSE": 0.7623186274463976,
+      "Test log MAE": 0.5790000585014642,
+      "Test R2": 0.6521356221058906,
+      "Median absolute percentage error": 0.4603294728698887,
+      "Nonzero coefficients": 9.0,
+      "Coefficient L1 norm": 1.6833832330400846,
+      "Coefficient L2 norm": 0.9217741572962651
+    },
+    "Elastic Net": {
+      "parameters": {
+        "alpha": 0.03162277660168379,
+        "l1_ratio": 0.3
+      },
+      "Test log RMSE": 0.7623032036742847,
+      "Test log MAE": 0.5771796848425038,
+      "Test R2": 0.6521496984420041,
+      "Median absolute percentage error": 0.4604355946975107,
+      "Nonzero coefficients": 9.0,
+      "Coefficient L1 norm": 1.625551962183234,
+      "Coefficient L2 norm": 0.9233845750587235
+    }
+  }
+}

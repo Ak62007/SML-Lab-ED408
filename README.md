@@ -1,7 +1,8 @@
 # SML Lab Work — ED408
 
-Machine learning lab exercises applied to the **BSDS500** (Berkeley
-Segmentation Data Set) image dataset (`archive/`).
+Machine learning lab exercises for ED408. Questions 1–7 use a derived
+**BSDS500** edge-pixel dataset; Questions 11–12 use real macroeconomic data
+from the **World Bank World Development Indicators**.
 
 ## Dataset adaptation
 
@@ -20,9 +21,20 @@ from it (`data/bsds_features.csv`, `scripts/build_dataset.py`):
 - 24,000 rows, perfectly balanced (12,000 / 12,000).
 
 This turns BSDS500 into a genuine binary classification problem (edge vs.
-non-edge pixel) and the *same* dataset is reused, unchanged, across every
-question — including the ones whose original prompt named a different
-dataset (Iris, spam/ham, MNIST) — per lab instructions.
+non-edge pixel) for Questions 1–7.
+
+## World Bank economics dataset
+
+`data/world_bank_macro_2010_2023.csv` is a local snapshot of country-year
+macroeconomic indicators downloaded from the official World Bank Indicators
+API. Aggregate regions are excluded. Its metadata JSON records indicator
+codes, source URLs, the date range, and download time.
+
+- **Question 11:** predicts log real GDP per capita with Linear Regression,
+  Lasso, Ridge, and Elastic Net using country-grouped validation and testing.
+- **Question 12:** compares ordinary PCA and RBF Kernel PCA for separating
+  high-income from non-high-income economies. GDP per capita is excluded from
+  the predictors.
 
 ## Structure
 
@@ -36,6 +48,10 @@ scripts/q4_logistic_regression.py   Q4 - Logistic Regression from scratch
 scripts/q5_pca_tsne.py              Q5 - PCA & t-SNE to 2D
 scripts/q6_outliers.py              Q6 - outlier detection (z-score, IQR)
 scripts/q7_compare_models.py        Q7 - LR vs SVM metric comparison
+scripts/build_world_bank_macro.py   downloads the Q11-Q12 economics snapshot
+scripts/create_q11_q12_notebooks.py regenerates the Q11-Q12 notebooks
+notebooks/Q11_L1_L2_Elastic_Net_Regularization.ipynb
+notebooks/Q12_Kernel_PCA_Nonlinear_Separation.ipynb
 results/figures/           all generated plots
 results/metrics/           numeric results (json/txt) per question
 docs/                      lab documentation (.docx) per question
@@ -48,4 +64,10 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install numpy pandas scikit-learn matplotlib seaborn scipy jupyter python-docx
 python3 scripts/build_dataset.py
 python3 scripts/q1_knn_scratch.py   # etc.
+
+# Optional: refresh the World Bank snapshot and regenerate Q11-Q12.
+python3 scripts/build_world_bank_macro.py
+python3 scripts/create_q11_q12_notebooks.py
+jupyter nbconvert --to notebook --execute --inplace notebooks/Q11_L1_L2_Elastic_Net_Regularization.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/Q12_Kernel_PCA_Nonlinear_Separation.ipynb
 ```
